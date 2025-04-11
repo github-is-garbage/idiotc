@@ -2,3 +2,4 @@
 
 IDB_BLACK BITMAP "resource/black.bmp"
 IDB_WHITE BITMAP "resource/white.bmp"
+IDR_YOUARE WAVE "resource/youare.wav"

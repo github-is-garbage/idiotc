@@ -1,4 +1,5 @@
 #include <windows.h>
+#include <mmsystem.h>
 
 #include "resource.h"
 
@@ -58,6 +59,11 @@ LRESULT CALLBACK WindowProcedure(HWND WindowHandle, UINT Message, WPARAM WParam,
 
 			return 0;
 		}
+
+		case WM_CREATE:
+			PlaySound(MAKEINTRESOURCE(IDR_YOUARE), GetModuleHandle(NULL), SND_RESOURCE | SND_ASYNC | SND_LOOP);
+
+			return 0;
 
 		case WM_TIMER:
 			if (WParam == IDT_BITMAP_TOGGLE)
@@ -129,6 +135,7 @@ int main()
 
 	DeleteObject(BlackBitmap);
 	DeleteObject(WhiteBitmap);
+	PlaySound(NULL, NULL, 0);\
 
 	return (int)Message.wParam;
 }
