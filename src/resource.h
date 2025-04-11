@@ -1,0 +1,3 @@
+#define IDB_BLACK 101
+#define IDB_WHITE 102
+#define IDT_BITMAP_TOGGLE 1

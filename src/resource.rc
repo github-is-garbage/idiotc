@@ -1,0 +1,4 @@
+#include "resource.h"
+
+IDB_BLACK BITMAP "resource/black.bmp"
+IDB_WHITE BITMAP "resource/white.bmp"

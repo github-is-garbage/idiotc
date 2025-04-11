@@ -15,7 +15,9 @@ file(GLOB_RECURSE HEADERS
 	"src/**.h"
 )
 
-add_executable(${PROJECT_NAME} ${SOURCES})
+set(RESOURCES src/resource.rc)
+
+add_executable(${PROJECT_NAME} ${SOURCES} ${RESOURCES})
 
 set_target_properties(
 	${PROJECT_NAME} PROPERTIES
