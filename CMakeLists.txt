@@ -24,6 +24,10 @@ set_target_properties(
 	PREFIX ""
 )
 
+target_compile_definitions(${PROJECT_NAME} PRIVATE
+	WIN32_LEAN_AND_MEAN
+)
+
 target_link_libraries(${PROJECT_NAME})
 
 install(
