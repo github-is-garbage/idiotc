@@ -17,7 +17,7 @@ file(GLOB_RECURSE HEADERS
 
 set(RESOURCES src/resource.rc)
 
-add_executable(${PROJECT_NAME} ${SOURCES} ${RESOURCES})
+add_executable(${PROJECT_NAME} WIN32 ${SOURCES} ${RESOURCES})
 
 set_target_properties(
 	${PROJECT_NAME} PROPERTIES
