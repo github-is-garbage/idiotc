@@ -1,5 +1,4 @@
 #include <windows.h>
-#include <stdio.h>
 
 #include "resource.h"
 
@@ -15,6 +14,7 @@ LRESULT CALLBACK WindowProcedure(HWND WindowHandle, UINT Message, WPARAM WParam,
 	{
 		case WM_SIZE:
 			InvalidateRect(WindowHandle, NULL, TRUE);
+
 			return 0;
 
 		case WM_PAINT:
@@ -55,6 +55,7 @@ LRESULT CALLBACK WindowProcedure(HWND WindowHandle, UINT Message, WPARAM WParam,
 			}
 
 			EndPaint(WindowHandle, &PaintStruct);
+
 			return 0;
 		}
 
@@ -89,10 +90,10 @@ int main()
 		return -1;
 
 	WNDCLASSW WindowClass = { 0 };
-	WindowClass.lpfnWndProc   = WindowProcedure;
-	WindowClass.hInstance     = AppInstance;
+	WindowClass.lpfnWndProc = WindowProcedure;
+	WindowClass.hInstance = AppInstance;
 	WindowClass.lpszClassName = ClassName;
-	WindowClass.hCursor       = LoadCursorW(NULL, MAKEINTRESOURCEW(IDC_ARROW));
+	WindowClass.hCursor = LoadCursorW(NULL, MAKEINTRESOURCEW(IDC_ARROW));
 	WindowClass.hbrBackground = GetSysColorBrush(COLOR_WINDOW);
 
 	if (!RegisterClassW(&WindowClass))
