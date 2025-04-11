@@ -8,13 +8,14 @@ const wchar_t ClassName[] = L"IdiotC";
 HBITMAP BlackBitmap;
 HBITMAP WhiteBitmap;
 BOOL IsWhite = TRUE;
+int PosX = 100, PosY = 100, VelX = 15, VelY = 15;
 
-LRESULT CALLBACK WindowProcedure(HWND WindowHandle, UINT Message, WPARAM WParam, LPARAM LParam)
+LRESULT CALLBACK WindowProcedure(HWND Window, UINT Message, WPARAM Wide, LPARAM Long)
 {
 	switch (Message)
 	{
 		case WM_SIZE:
-			InvalidateRect(WindowHandle, NULL, TRUE);
+			InvalidateRect(Window, NULL, TRUE);
 
 			return 0;
 
@@ -22,7 +23,7 @@ LRESULT CALLBACK WindowProcedure(HWND WindowHandle, UINT Message, WPARAM WParam,
 		{
 			PAINTSTRUCT PaintStruct;
 
-			HDC WindowDC = BeginPaint(WindowHandle, &PaintStruct);
+			HDC WindowDC = BeginPaint(Window, &PaintStruct);
 			HDC MemoryDC = CreateCompatibleDC(WindowDC);
 
 			if (MemoryDC)
@@ -34,7 +35,7 @@ LRESULT CALLBACK WindowProcedure(HWND WindowHandle, UINT Message, WPARAM WParam,
 				GetObject(CurrentBitmap, sizeof(BITMAP), &BitmapInfo);
 
 				RECT ClientRect;
-				GetClientRect(WindowHandle, &ClientRect);
+				GetClientRect(Window, &ClientRect);
 
 				int DestinationWidth = ClientRect.right - ClientRect.left;
 				int DestinationHeight = ClientRect.bottom - ClientRect.top;
@@ -55,7 +56,7 @@ LRESULT CALLBACK WindowProcedure(HWND WindowHandle, UINT Message, WPARAM WParam,
 				DeleteDC(MemoryDC);
 			}
 
-			EndPaint(WindowHandle, &PaintStruct);
+			EndPaint(Window, &PaintStruct);
 
 			return 0;
 		}
@@ -66,22 +67,45 @@ LRESULT CALLBACK WindowProcedure(HWND WindowHandle, UINT Message, WPARAM WParam,
 			return 0;
 
 		case WM_TIMER:
-			if (WParam == IDT_BITMAP_TOGGLE)
+			switch(Wide)
 			{
-				IsWhite = !IsWhite;
-				InvalidateRect(WindowHandle, NULL, TRUE);
+				case IDT_BITMAP_TOGGLE:
+					IsWhite = !IsWhite;
+					InvalidateRect(Window, NULL, TRUE);
+
+					break;
+
+				case IDT_BOUNCE:
+					int ScreenWidth = GetSystemMetrics(SM_CXSCREEN);
+        			int ScreenHeight = GetSystemMetrics(SM_CYSCREEN);
+
+					RECT Rect;
+					GetWindowRect(Window, &Rect);
+
+					int WindowWidth = Rect.right - Rect.left;
+        			int WindowHeight = Rect.bottom - Rect.top;
+
+					PosX += VelX;
+        			PosY += VelY;
+
+					if (PosX <= 0 || (PosX + WindowWidth) >= ScreenWidth) VelX = -VelX;
+					if (PosY <= 0 || (PosY + WindowHeight) >= ScreenHeight) VelY = -VelY;
+
+					SetWindowPos(Window, NULL, PosX, PosY, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
+
+					break;
 			}
 
 			return 0;
 
 		case WM_DESTROY:
-			KillTimer(WindowHandle, IDT_BITMAP_TOGGLE);
+			KillTimer(Window, IDT_BITMAP_TOGGLE);
 			PostQuitMessage(0);
 
 			return 0;
 
 		default:
-			return DefWindowProcW(WindowHandle, Message, WParam, LParam);
+			return DefWindowProcW(Window, Message, Wide, Long);
 	}
 }
 
@@ -105,7 +129,7 @@ int main()
 	if (!RegisterClassW(&WindowClass))
 		return -1;
 
-	HWND MainWindow = CreateWindowExW(
+	HWND Window = CreateWindowExW(
 		0,
 		ClassName,
 		L"idiotc",
@@ -119,12 +143,18 @@ int main()
 		NULL
 	);
 
-	if (!MainWindow)
+	if (!Window)
 		return -1;
 
-	ShowWindow(MainWindow, SW_SHOWDEFAULT);
-	UpdateWindow(MainWindow);
-	SetTimer(MainWindow, IDT_BITMAP_TOGGLE, 333, NULL);
+	ShowWindow(Window, SW_SHOWDEFAULT);
+	UpdateWindow(Window);
+
+	RECT Rect;
+	GetWindowRect(Window, &Rect);
+	PosX = Rect.left, PosY = Rect.top;
+
+	SetTimer(Window, IDT_BITMAP_TOGGLE, 333, NULL);
+	SetTimer(Window, IDT_BOUNCE, 10, NULL);
 
 	MSG Message;
 	while (GetMessageW(&Message, NULL, 0, 0) > 0)
