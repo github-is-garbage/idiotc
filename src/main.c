@@ -135,7 +135,7 @@ int main()
 
 	DeleteObject(BlackBitmap);
 	DeleteObject(WhiteBitmap);
-	PlaySound(NULL, NULL, 0);\
+	PlaySound(NULL, NULL, 0);
 
 	return (int)Message.wParam;
 }
