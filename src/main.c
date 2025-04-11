@@ -100,6 +100,7 @@ LRESULT CALLBACK WindowProcedure(HWND Window, UINT Message, WPARAM Wide, LPARAM 
 
 		case WM_DESTROY:
 			KillTimer(Window, IDT_BITMAP_TOGGLE);
+			KillTimer(Window, IDT_BOUNCE);
 			PostQuitMessage(0);
 
 			return 0;
